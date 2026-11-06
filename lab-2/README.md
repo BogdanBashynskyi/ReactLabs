@@ -22,36 +22,26 @@ https://denysmatsevych.github.io/web-development-2026/react/labs/lab-2/
 
 App
 ├── Header
-└── main
-├── Card (title="Тімлід")
-│ ├── Avatar (size={120})
-│ └── p
-└── Card (title="Команда")
-├── Profile (key="olena")
-│ ├── Avatar
-│ ├── h3
-│ └── p
-├── Profile (key="andrii")
-│ ├── Avatar
-│ ├── h3
-│ └── p
-├── Profile (key="iryna")
-│ ├── Avatar
-│ ├── h3
-│ └── p
-└── Profile (key="maksym")
-├── Avatar
-├── h3
-└── p
+├── Card
+│   └── Avatar
+└── Card
+    ├── Profile
+    │   └── Avatar
+    ├── Profile
+    │   └── Avatar
+    ├── Profile
+    │   └── Avatar
+    └── Profile
+        └── Avatar
 
 ## Дерево залежностей модулів
 
 main.jsx
 ├── index.css
 └── App.jsx
-├── Header.jsx
-├── Avatar.jsx
-├── Profile.jsx
-│ └── Avatar.jsx
-├── Card.jsx
-└── data.js
+    ├── Header.jsx
+    ├── Avatar.jsx
+    ├── Profile.jsx
+    │   └── Avatar.jsx
+    ├── Card.jsx
+    └── data.js
