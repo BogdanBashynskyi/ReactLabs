@@ -25,19 +25,17 @@ https://denysmatsevych.github.io/web-development-2026/react/labs/lab-3/
 показує цей блок діаграмою; перевірити її до `git push` можна в
 https://mermaid.live/.
 
-````mermaid
-
+```mermaid
 flowchart TD
-  App --> SearchBar
-  App --> MenuTable
-  MenuTable --> MenuCategory["MenuCategory × 3"]
-  MenuCategory --> MenuItemRow["MenuItemRow × 10"]
+  App --> SearchBar
+  App --> MenuTable
+  MenuTable --> MenuCategory["MenuCategory × 3"]
+  MenuCategory --> MenuItemRow["MenuItemRow × 10"]
+```
 
 ## Стан
-
 Для кожного рядка таблиці дайте відповідь на три питання з кроку 3 Thinking in
-
-React (§4.7):
+React:
 
 1. Чи залишаються ці дані незмінними з часом? Якщо так, це не стан.
 2. Чи передаються вони від батьківського компонента через пропси? Якщо так, це
@@ -58,9 +56,9 @@ React (§4.7):
 
 ---
 
-#### 2. `src/components/MenuItemRow.jsx` (створити новий файл)
+#### 2. `src/components/MenuItemRow.jsx`
 
-Створіть директорію `src/components/`[cite: 21]. Компонент відповідає за один рядок позиції в таблиці, приймає проп `item`[cite: 20, 21]:
+Створено директорію `src/components/`[cite: 21]. Компонент відповідає за один рядок позиції в таблиці, приймає проп `item`[cite: 20, 21]:
 
 ```jsx
 
