@@ -6,10 +6,10 @@ import { menu } from './data.js'
 
 export default function App() {
   const [filterText, setFilterText] = useState(
-    () => localStorage.getItem('menu.filterText') ?? ''
+    () => localStorage.getItem('menu.filterText') ?? '',
   )
   const [inStockOnly, setInStockOnly] = useState(
-    () => localStorage.getItem('menu.inStockOnly') === 'true'
+    () => localStorage.getItem('menu.inStockOnly') === 'true',
   )
 
   useEffect(() => {
