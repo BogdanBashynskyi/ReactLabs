@@ -4,10 +4,10 @@ import MenuTable from './MenuTable.jsx'
 
 export default function FilterableMenuTable({ menu }) {
   const [filterText, setFilterText] = useState(
-    () => localStorage.getItem('menu.filterText') ?? ''
+    () => localStorage.getItem('menu.filterText') ?? '',
   )
   const [inStockOnly, setInStockOnly] = useState(
-    () => localStorage.getItem('menu.inStockOnly') === 'true'
+    () => localStorage.getItem('menu.inStockOnly') === 'true',
   )
 
   useEffect(() => {
