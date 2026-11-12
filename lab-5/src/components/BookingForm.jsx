@@ -48,7 +48,7 @@ export default function BookingForm() {
         </div>
       </div>
 
-      <GuestsStepper />
+      <GuestsStepper defaultValue={2} />
 
       <div className="field">
         <label htmlFor="comment">Коментар</label>
