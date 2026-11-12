@@ -12,8 +12,18 @@ export default function BookingForm() {
     setBooking(Object.fromEntries(formData))
   }
 
+  function handleKeyDown(e) {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+      e.currentTarget.requestSubmit()
+    }
+  }
+
   return (
-    <form className="booking-form" onSubmit={handleSubmit}>
+    <form
+      className="booking-form"
+      onSubmit={handleSubmit}
+      onKeyDown={handleKeyDown}
+    >
       <div className="field">
         <label htmlFor="name">Ім&apos;я</label>
         <input id="name" name="name" type="text" required autoComplete="name" />
