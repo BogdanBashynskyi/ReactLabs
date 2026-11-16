@@ -4,7 +4,7 @@ import FavoriteButton from './FavoriteButton.jsx'
 export default function RelatedProducts({ products }) {
   const { visibleItems, hiddenCount, showMore, collapse } = useShowMore(
     products,
-    4
+    4,
   )
   const hasToggle = products.length > 4
 

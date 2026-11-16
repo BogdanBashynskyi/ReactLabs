@@ -3,7 +3,7 @@ import TimerView from './TimerView.jsx'
 
 export default function BrewTimer({ method }) {
   const { secondsLeft, isRunning, start, pause, reset } = useCountdown(
-    method.seconds
+    method.seconds,
   )
 
   let status = 'idle'
