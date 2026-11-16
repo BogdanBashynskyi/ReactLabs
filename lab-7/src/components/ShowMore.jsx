@@ -8,6 +8,33 @@
  *
  * Вимоги — у тестах tests/ShowMore.test.jsx.
  */
-export default function ShowMore() {
-  throw new Error('Not implemented: ShowMore')
+import { useState } from 'react'
+
+export default function ShowMore({ items, step, children }) {
+  const [visibleCount, setVisibleCount] = useState(step)
+
+  const visibleItems = items.slice(0, visibleCount)
+  const hiddenCount = items.length - visibleItems.length
+  const hasToggle = items.length > step
+
+  function handleClick() {
+    if (hiddenCount > 0) {
+      setVisibleCount((c) => Math.min(items.length, c + step))
+    } else {
+      setVisibleCount(step)
+    }
+  }
+
+  return (
+    <>
+      {children(visibleItems)}
+      {hasToggle && (
+        <button type="button" className="show-more" onClick={handleClick}>
+          {hiddenCount > 0
+            ? `Показати ще ${Math.min(step, hiddenCount)}`
+            : 'Згорнути'}
+        </button>
+      )}
+    </>
+  )
 }
