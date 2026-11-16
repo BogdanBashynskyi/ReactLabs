@@ -10,16 +10,13 @@ export default function RelatedProducts({ products }) {
 
   return (
     <section className="related">
-      <h2>Схожі товари</h2>
-      <ul className="related-grid">
+      <h2 id="related-heading">Схожі товари</h2>
+      <ul className="related-grid" aria-labelledby="related-heading">
         {visibleItems.map((product) => (
           <li key={product.id} className="related-card">
             <div className="related-header">
               <h3>{product.name}</h3>
-              <FavoriteButton
-                productId={product.id}
-                productName={product.name}
-              />
+              <FavoriteButton productId={product.id} name={product.name} />
             </div>
             <p className="related-notes">{product.notes}</p>
             <p className="related-price">{product.price} грн</p>

@@ -3,7 +3,7 @@ import { useShowMore } from '../hooks/useShowMore.js'
 export default function ShowMore({ items, step, children }) {
   const { visibleItems, hiddenCount, showMore, collapse } = useShowMore(
     items,
-    step
+    step,
   )
   const hasToggle = items.length > step
 

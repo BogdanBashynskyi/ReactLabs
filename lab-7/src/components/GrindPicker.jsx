@@ -1,22 +1,29 @@
 import { useLocalStorage } from '../hooks/useLocalStorage.js'
 
-export default function GrindPicker({ grinds }) {
-  const [selected, setSelected] = useLocalStorage('grind', grinds[0].id)
+const GRINDS = [
+  { id: 'whole', label: 'Зерно' },
+  { id: 'espresso', label: 'Для еспресо' },
+  { id: 'filter', label: 'Для фільтра' },
+  { id: 'french-press', label: 'Для френч-преса' },
+]
+
+export default function GrindPicker({ options = GRINDS }) {
+  const [selected, setSelected] = useLocalStorage('grind', options[0].id)
 
   return (
     <fieldset className="grind-picker">
       <legend>Помел</legend>
       <div className="grind-options">
-        {grinds.map((grind) => (
-          <label key={grind.id} className="grind-option">
+        {options.map((option) => (
+          <label key={option.id} className="grind-option">
             <input
               type="radio"
               name="grind"
-              value={grind.id}
-              checked={selected === grind.id}
-              onChange={() => setSelected(grind.id)}
+              value={option.id}
+              checked={selected === option.id}
+              onChange={() => setSelected(option.id)}
             />
-            {grind.label}
+            {option.label}
           </label>
         ))}
       </div>
