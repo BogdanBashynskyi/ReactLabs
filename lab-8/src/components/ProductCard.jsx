@@ -2,30 +2,36 @@ import { useState } from 'react'
 import Button from './Button.jsx'
 import FavoriteButton from './FavoriteButton.jsx'
 import GrindPicker from './GrindPicker.jsx'
+import { withAnalytics } from '../hoc/withAnalytics.jsx'
+
+const AddToCartButton = withAnalytics(Button, 'add_to_cart')
 
 export default function ProductCard({ product }) {
-  const [cartCount, setCartCount] = useState(0)
+  const [inCart, setInCart] = useState(0)
 
   return (
     <article className="product-card">
-      <div className="product-title">
+      <div className="product-header">
         <h1>{product.name}</h1>
         <FavoriteButton productId={product.id} name={product.name} />
       </div>
-      <p className="lead">
-        {product.origin}, {product.roast}. Ноти: {product.notes.join(', ')}.
-      </p>
+      <p className="product-description">{product.description}</p>
       <GrindPicker />
-      <p className="price">
-        {product.price} грн <span>за {product.weight}</span>
+      <p className="product-price">
+        <strong>{product.price} грн</strong> за 250 г
       </p>
-      <div className="cart">
-        <Button onClick={() => setCartCount(cartCount + 1)}>
+      <div className="cart-row">
+        <AddToCartButton
+          analyticsData={{ productId: product.id }}
+          onClick={() => setInCart((c) => c + 1)}
+        >
           Додати в кошик
-        </Button>
-        <p className="cart-status" role="status">
-          {cartCount > 0 ? `У кошику: ${cartCount}` : ''}
-        </p>
+        </AddToCartButton>
+        {inCart > 0 && (
+          <p role="status" className="cart-count">
+            У кошику: {inCart}
+          </p>
+        )}
       </div>
     </article>
   )
