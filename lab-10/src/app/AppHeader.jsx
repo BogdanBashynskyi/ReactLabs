@@ -1,5 +1,5 @@
-import { useCart } from '../hooks/useCart.js'
-import { paths } from '../utils/paths.js'
+import { useCart } from '../shared/useCart.js'
+import { paths } from '../shared/paths.js'
 import Link from './Link.jsx'
 
 export default function AppHeader() {

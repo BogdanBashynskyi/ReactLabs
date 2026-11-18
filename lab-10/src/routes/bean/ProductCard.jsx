@@ -1,5 +1,5 @@
-import AddToCartButton from './AddToCartButton.jsx'
-import FavoriteButton from './FavoriteButton.jsx'
+import AddToCartButton from './AddToCartButton.js'
+import FavoriteButton from './FavoriteButton.js'
 import GrindPicker from './GrindPicker.jsx'
 
 export default function ProductCard({ product }) {

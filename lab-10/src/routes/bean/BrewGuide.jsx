@@ -1,4 +1,4 @@
-import BrewTimer from './BrewTimer.jsx'
+import BrewTimer from '.././BrewTimer.jsx'
 
 export default function BrewGuide({ methods }) {
   return (
