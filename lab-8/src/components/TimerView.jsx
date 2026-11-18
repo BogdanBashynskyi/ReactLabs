@@ -1,6 +1,8 @@
-import { withAnalytics } from '../hoc/withAnalytics.jsx'
-import { formatTime } from '../formatTime.js'
 import Button from './Button.jsx'
+import { formatTime } from '../formatTime.js'
+import { withAnalytics } from '../hoc/withAnalytics.jsx'
+
+const PrimaryButton = withAnalytics(Button, 'timer_control')
 
 export default function TimerView({
   method,
@@ -11,37 +13,43 @@ export default function TimerView({
   onReset,
 }) {
   let primaryLabel = 'Старт'
-  let onPrimary = onStart
+  let primaryAction = onStart
   let action = 'start'
+
   if (status === 'running') {
     primaryLabel = 'Пауза'
-    onPrimary = onPause
+    primaryAction = onPause
     action = 'pause'
   } else if (status === 'paused') {
     primaryLabel = 'Продовжити'
+    primaryAction = onStart
     action = 'resume'
   } else if (status === 'done') {
     primaryLabel = 'Спочатку'
-    onPrimary = onReset
+    primaryAction = onReset
     action = 'restart'
   }
-  const PrimaryButton = withAnalytics(Button, `timer_${action}:${method.id}`)
+
+  const showReset = status === 'running' || status === 'paused'
 
   return (
-    <article className="brew-timer" aria-labelledby={`${method.id}-title`}>
-      <h3 id={`${method.id}-title`}>{method.name}</h3>
-      <p>{method.recipe}</p>
-      <p className="time" role="timer">
+    <article className="timer-card">
+      <h3>{method.name}</h3>
+      <p className="timer-recipe">{method.recipe}</p>
+      <p className="timer-display" role="timer">
         {formatTime(secondsLeft)}
       </p>
-      <p className="timer-done" role="status">
+      <p role="status" className="timer-done">
         {status === 'done' ? 'Готово! Час пити каву.' : ''}
       </p>
       <div className="timer-controls">
-        <PrimaryButton onClick={onPrimary}>{primaryLabel}</PrimaryButton>
-        {(status === 'running' || status === 'paused') && (
-          <Button onClick={onReset}>Скинути</Button>
-        )}
+        <PrimaryButton
+          analyticsData={{ method: method.id, action }}
+          onClick={primaryAction}
+        >
+          {primaryLabel}
+        </PrimaryButton>
+        {showReset && <Button onClick={onReset}>Скинути</Button>}
       </div>
     </article>
   )
