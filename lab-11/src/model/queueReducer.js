@@ -1,7 +1,7 @@
 /**
- * Ред'юсер черги замовлень. Його написав колега; у нього черга працює.
- *
- * Стан: { orders: [...] }. Кожне замовлення — як у src/data/orders.js:
+ * Ред'юсер черги замовлень. Стан містить вкладені замовлення й nextNumber:
+ *   { orders: [...], nextNumber }
+ * Кожне замовлення — як у src/data/orders.js:
  *   { id, number, status, customer: { id, name }, items: [...] }
  * status — колонка на дошці: 'new' («Нові»), 'brewing' («Готуються»),
  * 'ready' («Готові») або 'served' («Видані»).
@@ -27,59 +27,82 @@
 
 const nextStatus = { new: 'brewing', brewing: 'ready', ready: 'served' }
 
-// Номер останнього замовлення. У стані його не тримаємо: номери лише
-// ростуть, а номер скасованого замовлення новому не дістається.
-let lastNumber = 0
-
-/** Початковий стан черги з вкладених замовлень, як їх повертає loadOrders(). */
+/** Початковий стан черги з вкладеними замовленнями, як їх повертає loadOrders(). */
 export function createInitialState(orders) {
-  lastNumber = Math.max(...orders.map((order) => order.number))
-  return { orders }
+  const nextNumber = Math.max(0, ...orders.map((order) => order.number))
+  return { orders, nextNumber }
 }
 
 export function queueReducer(state, action) {
   switch (action.type) {
     case 'order_placed': {
-      lastNumber += 1
+      const number = state.nextNumber + 1
       const order = {
         ...action.order,
-        number: lastNumber,
+        customer: { ...action.order.customer },
+        number,
         status: 'new',
-        items: action.order.items.map((item) => ({ ...item, done: false })),
+        items: action.order.items.map((item) => ({
+          ...item,
+          syrups: [...item.syrups],
+          done: false,
+        })),
       }
-      return { ...state, orders: [...state.orders, order] }
-    }
-    case 'item_toggled': {
-      const order = state.orders.find((o) => o.id === action.orderId)
-      const item = order.items.find((i) => i.id === action.itemId)
-      item.done = !item.done
-      return { ...state, orders: [...state.orders] }
-    }
-    case 'order_advanced': {
       return {
         ...state,
-        orders: state.orders.map((order) =>
-          order.id === action.orderId
-            ? { ...order, status: nextStatus[order.status] }
-            : order,
+        orders: [...state.orders, order],
+        nextNumber: number,
+      }
+    }
+    case 'item_toggled': {
+      const order = state.orders.find((current) => current.id === action.orderId)
+      if (!order || !order.items.some((item) => item.id === action.itemId)) {
+        return state
+      }
+      return {
+        ...state,
+        orders: state.orders.map((currentOrder) =>
+          currentOrder.id !== action.orderId
+            ? currentOrder
+            : {
+                ...currentOrder,
+                items: currentOrder.items.map((item) =>
+                  item.id === action.itemId
+                    ? { ...item, done: !item.done }
+                    : item,
+                ),
+              },
+        ),
+      }
+    }
+    case 'order_advanced': {
+      const order = state.orders.find((current) => current.id === action.orderId)
+      const status = order && nextStatus[order.status]
+      if (!status) return state
+      return {
+        ...state,
+        orders: state.orders.map((current) =>
+          current.id === action.orderId ? { ...current, status } : current,
         ),
       }
     }
     case 'order_cancelled': {
-      const index = state.orders.findIndex((o) => o.id === action.orderId)
-      state.orders.splice(index, 1)
-      return { ...state, orders: [...state.orders] }
-    }
-    case 'customer_renamed': {
-      const order = state.orders.find(
-        (o) => o.customer.id === action.customerId,
-      )
+      if (!state.orders.some((order) => order.id === action.orderId)) return state
       return {
         ...state,
-        orders: state.orders.map((o) =>
-          o === order
-            ? { ...o, customer: { ...o.customer, name: action.name } }
-            : o,
+        orders: state.orders.filter((order) => order.id !== action.orderId),
+      }
+    }
+    case 'customer_renamed': {
+      if (!state.orders.some((order) => order.customer.id === action.customerId)) {
+        return state
+      }
+      return {
+        ...state,
+        orders: state.orders.map((order) =>
+          order.customer.id === action.customerId
+            ? { ...order, customer: { ...order.customer, name: action.name } }
+            : order,
         ),
       }
     }
