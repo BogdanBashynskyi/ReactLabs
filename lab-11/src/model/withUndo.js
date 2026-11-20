@@ -22,14 +22,45 @@
  *   undoableCounter(createHistory(0), { type: 'incremented' })
  *   // { past: [0], present: 1, future: [] }
  *
- * Поки що кидає помилку. Вимоги — у тестах tests/withUndo.test.js і
- * tests/HistoryButtons.test.jsx.
  */
-export function withUndo(/* reducer, limit = 20 */) {
-  throw new Error('Not implemented: withUndo')
+export function withUndo(reducer, limit = 20) {
+  function undoableReducer(history, action) {
+    if (action.type === 'undo') {
+      if (history.past.length === 0) return history
+      return {
+        past: history.past.slice(0, -1),
+        present: history.past[history.past.length - 1],
+        future: [history.present, ...history.future],
+      }
+    }
+
+    if (action.type === 'redo') {
+      if (history.future.length === 0) return history
+      return {
+        past: appendWithinLimit(history.past, history.present, limit),
+        present: history.future[0],
+        future: history.future.slice(1),
+      }
+    }
+
+    const present = reducer(history.present, action)
+    if (present === history.present) return history
+    return {
+      past: appendWithinLimit(history.past, history.present, limit),
+      present,
+      future: [],
+    }
+  }
+
+  return undoableReducer
 }
 
 /** Історія, з якої починають: present і порожні past та future. */
-export function createHistory(/* present */) {
-  throw new Error('Not implemented: createHistory')
+export function createHistory(present) {
+  return { past: [], present, future: [] }
+}
+
+function appendWithinLimit(past, present, limit) {
+  if (limit <= 0) return []
+  return [...past, present].slice(-limit)
 }
